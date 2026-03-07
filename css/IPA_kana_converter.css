@@ -1,32 +1,9 @@
-/* 全体設定 */
-body { 
-    font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif; 
-    margin: 0;
-    display: flex; /* サイドメニューを並べるため */
-    background-color: #f8f9fa; 
-    color: #333; 
-}
-
-/* メインコンテンツ領域 */
-.main-content {
-    flex: 1;
-    max-width: 800px; 
-    margin: 20px auto; 
-    padding: 20px; 
-}
-
-.container { 
-    background: white; 
-    padding: 25px; 
-    border-radius: 10px; 
-    box-shadow: 0 2px 15px rgba(0,0,0,0.1); 
-}
-
-/* IPA入力・表示フォント */
-textarea#ipaInput, .ipa-sym { 
+/* IPA表示用フォントファミリー */
+.ipa-font-primary {
     font-family: "Charis SIL", "Doulos SIL", "Gentium Plus", "Lucida Sans Unicode", "Segoe UI Symbol", "Arial Unicode MS", serif;
 }
 
+/* 入力欄 */
 textarea#ipaInput { 
     width: 100%; 
     height: 80px; 
@@ -35,8 +12,11 @@ textarea#ipaInput {
     border: 1px solid #ccc; 
     border-radius: 6px; 
     box-sizing: border-box; 
+    extend: .ipa-font-primary; /* 概念的な継承 */
+    font-family: "Charis SIL", "Doulos SIL", "Gentium Plus", "Lucida Sans Unicode", "Segoe UI Symbol", "Arial Unicode MS", serif;
 }
 
+/* IPA記号の強調 */
 .ipa-sym { 
     font-weight: bold; 
     color: #d63384; 
@@ -44,9 +24,43 @@ textarea#ipaInput {
     background-color: #fff0f6;
     padding: 2px 6px;
     border-radius: 4px;
+    font-family: "Charis SIL", "Doulos SIL", "Gentium Plus", "Lucida Sans Unicode", "Segoe UI Symbol", "Arial Unicode MS", serif;
 }
 
-/* ボタン・装飾 */
+/* 変換後カタカナ表示 */
+.kana-display { 
+    font-size: 2.5rem; 
+    font-weight: bold; 
+    color: #007bff; 
+    text-align: center; 
+    margin-bottom: 20px; 
+    border-bottom: 2px solid #eee; 
+    padding-bottom: 10px; 
+}
+
+/* 変換オプションエリア */
+.option-area {
+    margin: 10px 0;
+    padding: 10px;
+    background: #f0f4f8;
+    border-radius: 6px;
+}
+
+/* 子音単独の小さい文字 */
+.small-char {
+    font-size: 0.55em;
+    color: #339fff;
+    vertical-align: 0em;
+    margin: 0 1px;
+}
+
+/* 変換結果テーブル */
+table { width: 100%; border-collapse: collapse; margin-top: 10px;}
+th, td { border: 1px solid #ddd; padding: 12px; text-align: center; }
+th { background-color: #f2f2f2; }
+.ipa-input-org { background:#e9ecef; color:#007bff; }
+
+/* ボタン */
 button { 
     margin-top: 15px; 
     width: 100%; 
@@ -59,62 +73,4 @@ button {
     cursor: pointer; 
     font-weight: bold; 
 }
-
-.kana-display { 
-    font-size: 2.5rem; 
-    font-weight: bold; 
-    color: #007bff; 
-    text-align: center; 
-    margin-bottom: 20px; 
-    border-bottom: 2px solid #eee; 
-    padding-bottom: 10px; 
-}
-
-/* テーブル */
-table { width: 100%; border-collapse: collapse; }
-th, td { border: 1px solid #ddd; padding: 12px; text-align: center; }
-th { background-color: #f2f2f2; }
-.ipa-input-org { background:#e9ecef; color:#007bff; }
-
-/* 特殊スタイル */
-.small-char {
-    font-size: 0.55em;
-    color: #339fff;
-    vertical-align: 0em;
-    margin: 0 1px;
-}
-
-.option-area {
-    margin: 10px 0;
-    padding: 10px;
-    background: #f0f4f8;
-    border-radius: 6px;
-}
-
-/* 左サイドメニュー用スタイル */
-.side-menu {
-    width: 200px;
-    background-color: #343a40;
-    color: white;
-    height: 100vh;
-    position: sticky;
-    top: 0;
-    padding: 20px 0;
-}
-
-.side-menu ul {
-    list-style: none;
-    padding: 0;
-}
-
-.side-menu li a {
-    color: #adb5bd;
-    text-decoration: none;
-    padding: 10px 20px;
-    display: block;
-}
-
-.side-menu li a:hover {
-    background-color: #495057;
-    color: white;
-}
+button:hover { opacity: 0.9; }
