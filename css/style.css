@@ -1,15 +1,13 @@
-/* common.css */
-
-/* 基本レイアウト：メニューとメインを横並びに */
 body { 
     margin: 0;
     display: flex; 
     background-color: #f8f9fa; 
     color: #333; 
-    font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif; 
+    font-family: sans-serif;
+    min-height: 100vh;
 }
 
-/* 左サイドメニュー */
+/* サイドメニュー固定 */
 .side-menu {
     width: 200px;
     background-color: #343a40;
@@ -17,34 +15,24 @@ body {
     height: 100vh;
     position: sticky;
     top: 0;
-    padding: 20px 0;
-    flex-shrink: 0; /* メニューの幅を固定 */
+    flex-shrink: 0;
 }
 
-.side-menu ul {
-    list-style: none;
-    padding: 0;
-}
-
+.side-menu ul { list-style: none; padding: 20px 0; margin: 0; }
 .side-menu li a {
     color: #adb5bd;
     text-decoration: none;
     padding: 10px 20px;
     display: block;
-    transition: 0.2s;
 }
+.side-menu li a:hover { background-color: #495057; color: white; }
 
-.side-menu li a:hover {
-    background-color: #495057;
-    color: white;
-}
-
+/* メイン領域：ここをflexにして中央寄せ */
 .main-content {
-    flex: 1;            /* 残りの幅をすべて占める */
-    display: flex;      /* 子要素（カード）を配置するためにflex化 */
-    justify-content: center; /* 水平方向の中央寄せ */
-    padding: 20px; 
-    background-color: #f8f9fa;
+    flex: 1;
+    display: flex;
+    justify-content: center; /* 横方向中央 */
+    padding: 20px;
 }
 
 .container { 
@@ -52,7 +40,7 @@ body {
     padding: 25px; 
     border-radius: 10px; 
     box-shadow: 0 2px 15px rgba(0,0,0,0.1); 
-    width: 100%;        /* 基本は幅いっぱい */
-    max-width: 800px;   /* ただし800px以上には広げない */
-    height: fit-content; /* 中身の高さに合わせる */
+    width: 100%;
+    max-width: 800px;
+    height: fit-content;
 }
