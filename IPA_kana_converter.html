@@ -351,8 +351,8 @@ function processIPA(isAuto = false) {
     let processingInput = normalizedInput;
 
     // --- STEP 0.5: 子音 + ː を子音重ねに置換 (t͡sː -> t͡st͡s 等) ---
-    const consonantsOnly = "pbtdʈɖcɟkɡqɢʡʔmɱnŋɲɳɴʙrʀⱱɾɽɸβfvθðszʃʒʂʐçʝxɣχʁħʕhɦɬɮʋɹɻjɰlɭʎʟwɥʍɕʑɓɗʄɠʛᶑ";
-    
+    const consonantsOnly = "pbtdʈɖcɟkɡqɢʡʔmɱnŋɲɳɴʙrʀⱱɾɽɸβfvθðszʃʒʂʐçʝxɣχʁħʕhɦɬɮʋɹɻjɰlɭʎʟwɥʍɕʑɓɗʄɠʛᶑt͡sd͡zt͡ʃd͡ʒt͡ɕd͡ʑt͡ɬd͡ɮ";
+
     for (const key of sortedIpaKeys) {
         // keyが子音リストに含まれている場合のみ、重ね処理を行う
         if (consonantsOnly.includes(key)) {
@@ -377,9 +377,9 @@ function processIPA(isAuto = false) {
             continue;
         }
 
-        // 【追加】空白（半角・全角）を一時的に半角スペースとして保持
+        // 【追加】空白（半角・全角）を全角スペースとして保持
         if (tempInput.startsWith(" ") || tempInput.startsWith("　")) {
-            intermediate += " "; 
+            intermediate += "　"; 
             tempInput = tempInput.slice(1);
             continue;
         }
@@ -400,10 +400,36 @@ function processIPA(isAuto = false) {
         }
     }
 
-    // --- STEP 2: カタカナ変換 ---
-let finalKana = ""; 
+    // --- STEP 1.5: 子音が連続する場合、前の方を「ッ」に置換 ---
+    // n, m 以外の子音が次に続くなら、今の文字を「ッ」にする
+    let fastIntermediate = "";
+    const cons = "bcdfghjklpqrstvwxyzʦʣʧʃj";
+
+    // 同一とみなすペアの正規表現置換（長いものから順に）
+    // 例: tʦ → ʦʦ, tʧ → ʧʧ, dʣ → ʣ高度, zj → jj, sʃ → ʃʃ
+    let normalized = intermediate
+        .replace(/tʦ/g, "ʦʦ")
+        .replace(/tʧ/g, "ʧʧ")
+        .replace(/dʣ/g, "ʣʣ")
+        .replace(/zj/g, "jj")
+        .replace(/sʃ/g, "ʃʃ");
+
+    for (let j = 0; j < intermediate.length; j++) {
+        let curr = normalized[j];
+        let next = normalized[j+1];
+        if (next && curr === next && cons.includes(next) && cons.includes(curr) && curr !== "n" && curr !== "m") {
+            fastIntermediate += "ッ";
+        } else {
+            fastIntermediate += curr;
+        }
+    }
+    intermediate = fastIntermediate;
+
+    // --- STEP 2: カタカナ変換 ---
+    let finalKana = ""; 
     let i = 0;
     const vowels = "aiueo";
+    let lastChar = ""; // 直前の文字を保持
     const isSmallConsonant = document.getElementById('smallConsonant').checked;
     const singleConsonants = ["k", "g", "s", "z", "t", "d", "n", "h", "f", "b", "p", "m", "y", "r", "l", "v", "w", "th", "dh", "ʃ", "ʧ", "j", "ʦ", "ʣ", "ny", "ŋ"];
 
@@ -437,20 +463,8 @@ let finalKana = "";
             }
         }
 
-if (match) {
+        if (match) {
             let res = match;
-            let remaining = intermediate.slice(i + matchedLen);
-
-            // 母音で終わる音の後ろに「同じ子音」が2つ並ぶ場合のみ「ッ」を付与
-            if (remaining.length >= 2) {
-                let n1 = remaining[0];
-                let n2 = remaining[1];
-                if (n1 === n2 && "bcdfghjklpqrstvwxyz".includes(n1) && 
-                    !vowels.includes(n2) && n1 !== "n" && n1 !== "m" && n1 !== "y") {
-                    res += "ッ";
-                    i += 1; 
-                }
-            }
 
             // サイズ変更の判定
             if (isSmallConsonant && singleConsonants.includes(matchedKey)) {
@@ -461,11 +475,7 @@ if (match) {
             i += matchedLen;
         } else {
             // --- フォールバック処理（マッチしなかった場合） ---
-            // 子音が重なっていれば「ッ」を付与
-            if (next && curr === next && "bcdfghjklpqrstvwxyz".includes(curr)) {
-                finalKana += "ッ";
-                i++;
-            } else if (jpToKana[curr]) {
+            if (jpToKana[curr]) {
                 finalKana += jpToKana[curr];
                 i++;
             } else {
