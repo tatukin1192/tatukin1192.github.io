@@ -112,16 +112,16 @@ const ipaToJpMap = {
     "m": "m", "ɱ": "m", "n": "n", "ŋ": "ŋ", "ɲ": "ny", "ɳ": "n", "ɴ": "ン", "ɰ̃": "ン",
     "ʙ̥": "p", "ʙ": "b", "r": "r", "ʀ": "r",
     "ⱱ" : "v", "ɾ": "r", "ɽ": "r",
-    "ɸ": "f", "β": "b", "f": "f", "v": "v", "θ": "s", "ð": "z", "s": "s", "z": "z", "ʃ": "sh", "ʒ": "j", "ʂ": "sh", "ʐ": "j", "ç": "hy", "ʝ": "y", "x": "h", "ɣ": "g", "χ": "h", "ʁ": "g", "ħ": "h", "ʕ": "h", "h": "h", "ɦ": "h", 
-    "ɬ": "sh", "ɮ": "j",
+    "ɸ": "f", "β": "b", "f": "f", "v": "v", "θ": "s", "ð": "z", "s": "s", "z": "z", "ʃ": "ʃ", "ʒ": "j", "ʂ": "ʃ", "ʐ": "j", "ç": "hy", "ʝ": "y", "x": "h", "ɣ": "g", "χ": "h", "ʁ": "g", "ħ": "h", "ʕ": "h", "h": "h", "ɦ": "h", 
+    "ɬ": "ʃ", "ɮ": "j",
     "β̞": "w", "ʋ": "w", "ɹ": "r", "ɻ": "r", "j": "y", "ɰ": "w",
     "l": "r", "ɭ": "r", "ʎ": "j", "ʟ": "r",
     
     "w": "w", "ɥ": "yu", "ʍ": "w",
     "ʲ": "y", "ʷ": "w",
     
-    "ɕ": "sh", "ʑ": "j",
-    "t͡s": "ts", "d͡z": "dz", "t͡ʃ": "ch", "d͡ʒ": "j", "t͡ɕ": "ch", "d͡ʑ": "j", "t͡ɬ": "ch", "d͡ɮ": "j",
+    "ɕ": "ʃ", "ʑ": "j",
+    "t͡s": "ʦ", "d͡z": "ʣ", "t͡ʃ": "ʧ", "d͡ʒ": "j", "t͡ɕ": "ʧ", "d͡ʑ": "j", "t͡ɬ": "ʧ", "d͡ɮ": "j",
     
     "ʜ": "h", "ʢ": "h", "ɧ": "h", "ɺ": "r", "ɫ": "r",
     
@@ -181,13 +181,13 @@ const jpToKana = {
     "pya":"ピャ", "pyi":"ピ", "pyu":"ピュ", "pye":"ピェ", "pyo":"ピョ",
     "bya":"ビャ", "byi":"ビ", "byu":"ビュ", "bye":"ビェ", "byo":"ビョ",
     // 英語・外来語用
-    "sha":"シャ", "shi":"シ", "shu":"シュ", "she":"シェ", "sho":"ショ",
-    "cha":"チャ", "chi":"チ", "chu":"チュ", "che":"チェ", "cho":"チョ",
+    "ʃa":"シャ", "ʃi":"シ", "ʃu":"シュ", "ʃe":"シェ", "ʃo":"ショ",
+    "ʧa":"チャ", "ʧi":"チ", "ʧu":"チュ", "ʧe":"チェ", "ʧo":"チョ",
     "ja":"ジャ", "ji":"ジ", "ju":"ジュ", "je":"ジェ", "jo":"ジョ",
     "fa":"ファ", "fi":"フィ", "fu":"フ", "fe":"フェ", "fo":"フォ",
     "va":"ヴァ", "vi":"ヴィ", "vu":"ヴ", "ve":"ヴェ", "vo":"ヴォ",
-    "tsa":"サ", "tsi":"ツィ", "tsu":"ツ", "tse":"ツェ", "tso":"ツォ",
-    "dza":"ザ", "dzi":"ズィ", "dzu":"ズ", "dze":"ゼ", "dzo":"ゾ",
+    "ʦa":"ツァ", "ʦi":"ツィ", "ʦu":"ツ", "ʦe":"ツェ", "ʦo":"ツォ",
+    "ʣa":"ザ", "ʣi":"ズィ", "ʣu":"ズ", "ʣe":"ゼ", "ʣo":"ゾ",
     "tya":"テャ", "tyi":"ティ", "tyu":"テュ", "tye":"ティェ", "tyo":"テョ",
     "dya":"デャ", "dyi":"ディ", "dyu":"デュ", "dye":"ディェ", "dyo":"デョ",
     "kwa":"クァ", "kwi":"クィ", "kwu":"ク", "kwe":"クェ", "kwo":"クォ",
@@ -197,7 +197,7 @@ const jpToKana = {
     "k":"ク", "g":"グ", "s":"ス", "z":"ズ", "t":"ト", "d":"ド", 
     "n":"ン", "h":"フ", "f":"フ", "b":"ブ", "p":"プ", "m":"ム", 
     "y":"ィ", "r":"ル", "l":"ル", "v":"ヴ", "w":"ゥ", "th":"ス", "dh":"ズ",
-    "sh":"シュ", "ch":"チュ", "j":"ジュ", "ts":"ツ", "dz":"ズ", "ny":"ン", "ŋ":"ン",
+    "ʃ":"シュ", "ʧ":"チュ", "j":"ジュ", "ʦ":"ツ", "ʣ":"ズ", "ny":"ン", "ŋ":"ン",
 };
 // 3. 解説データの拡充
 const ipaDesc = {
@@ -401,70 +401,67 @@ function processIPA(isAuto = false) {
     }
 
     // --- STEP 2: カタカナ変換 ---
-    let finalKana = ""; // ここを innerHTML で流し込む場合は最終的に HTML 文字列になります
+let finalKana = ""; 
     let i = 0;
     const vowels = "aiueo";
-    
-    // 追加：チェックボックスの状態を取得
     const isSmallConsonant = document.getElementById('smallConsonant').checked;
-    // 追加：小さくする対象となる「子音単独」のキーリスト
-    const singleConsonants = ["k", "g", "s", "z", "t", "d", "n", "h", "f", "b", "p", "m", "y", "r", "l", "v", "w", "th", "dh", "sh", "ch", "j", "ts", "dz", "ny", "ŋ"];
+    const singleConsonants = ["k", "g", "s", "z", "t", "d", "n", "h", "f", "b", "p", "m", "y", "r", "l", "v", "w", "th", "dh", "ʃ", "ʧ", "j", "ʦ", "ʣ", "ny", "ŋ"];
 
     while (i < intermediate.length) {
         let curr = intermediate[i];
         let next = intermediate[i + 1];
 
+        // 特殊記号の処理
         if (curr === " ") { finalKana += "　"; i++; continue; }
         if (curr === "ー") { finalKana += "ー"; i++; continue; }
         if (curr === "ッ") { finalKana += "ッ"; i++; continue; }
 
+        // 1. 鼻音（mb/mp）の処理
         if (curr === "m" && (next === "b" || next === "p")) {
             finalKana += "ン";
             i++;
             continue; 
         }
 
+        // 2. 最大4文字のマッチング（tsaなどの外来語、サス/アツァス判定の核）
         let match = null;
         let matchedLen = 0;
-        let matchedKey = ""; // マッチしたキーを保持
+        let matchedKey = "";
         for (let len = 4; len >= 1; len--) {
             let chunk = intermediate.substr(i, len);
             if (jpToKana[chunk]) {
                 match = jpToKana[chunk];
                 matchedLen = len;
-                matchedKey = chunk; // 判定用に保存
+                matchedKey = chunk;
                 break;
             }
         }
 
-        if (match) {
+if (match) {
             let res = match;
             let remaining = intermediate.slice(i + matchedLen);
-            if (remaining.length > 0 && !vowels.includes(remaining[0])) {
-                let currentConsonantBase = intermediate.substr(i, matchedLen).replace(/[aiueo]/g, "");
-                let nextConsonantBase = remaining.substr(0, 2).replace(/[aiueo]/g, "");
-                
-                if (currentConsonantBase !== "" && currentConsonantBase !== "y" && nextConsonantBase.startsWith(currentConsonantBase)) {
-                    if (currentConsonantBase === "n" || currentConsonantBase === "m") {
-                        // スキップ
-                    } else {
-                        finalKana += "ッ";
-                        i += matchedLen;
-                        continue;
-                    }
+
+            // 母音で終わる音の後ろに「同じ子音」が2つ並ぶ場合のみ「ッ」を付与
+            if (remaining.length >= 2) {
+                let n1 = remaining[0];
+                let n2 = remaining[1];
+                if (n1 === n2 && "bcdfghjklpqrstvwxyz".includes(n1) && 
+                    !vowels.includes(n2) && n1 !== "n" && n1 !== "m" && n1 !== "y") {
+                    res += "ッ";
+                    i += 1; 
                 }
             }
-            
-            // --- ここでサイズ変更の判定 ---
+
+            // サイズ変更の判定
             if (isSmallConsonant && singleConsonants.includes(matchedKey)) {
-                finalKana += `<span class="small-char">${res}</span>`;
+                finalKana += `<span class="small-char">${match}</span>`;
             } else {
-                finalKana += res;
+                finalKana += match;
             }
-            
             i += matchedLen;
         } else {
-            // ...以下、既存のフォールバック処理...
+            // --- フォールバック処理（マッチしなかった場合） ---
+            // 子音が重なっていれば「ッ」を付与
             if (next && curr === next && "bcdfghjklpqrstvwxyz".includes(curr)) {
                 finalKana += "ッ";
                 i++;
@@ -477,7 +474,6 @@ function processIPA(isAuto = false) {
             }
         }
     }
-
     // 最後に innerHTML で出力（spanタグを有効にするため）
     document.getElementById('kanaOutput').innerHTML = finalKana;
 
