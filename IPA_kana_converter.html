@@ -401,9 +401,9 @@ function processIPA(isAuto = false) {
     }
 
     // --- STEP 1.5: 子音が連続する場合、前の方を「ッ」に置換 ---
-    // n, m 以外の子音が次に続くなら、今の文字を「ッ」にする
+    // n, m, y, w 以外の子音が次に続くなら、今の文字を「ッ」にする
     let fastIntermediate = "";
-    const cons = "bcdfghjklpqrstvwxyzʦʣʧʃj";
+    const cons = "bcdfghjklpqrstvxzʦʣʧʃj";
 
     // 同一とみなすペアの正規表現置換（長いものから順に）
     // 例: tʦ → ʦʦ, tʧ → ʧʧ, dʣ → ʣ高度, zj → jj, sʃ → ʃʃ
