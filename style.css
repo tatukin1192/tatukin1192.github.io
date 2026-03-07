@@ -1,0 +1,120 @@
+/* 全体設定 */
+body { 
+    font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif; 
+    margin: 0;
+    display: flex; /* サイドメニューを並べるため */
+    background-color: #f8f9fa; 
+    color: #333; 
+}
+
+/* メインコンテンツ領域 */
+.main-content {
+    flex: 1;
+    max-width: 800px; 
+    margin: 20px auto; 
+    padding: 20px; 
+}
+
+.container { 
+    background: white; 
+    padding: 25px; 
+    border-radius: 10px; 
+    box-shadow: 0 2px 15px rgba(0,0,0,0.1); 
+}
+
+/* IPA入力・表示フォント */
+textarea#ipaInput, .ipa-sym { 
+    font-family: "Charis SIL", "Doulos SIL", "Gentium Plus", "Lucida Sans Unicode", "Segoe UI Symbol", "Arial Unicode MS", serif;
+}
+
+textarea#ipaInput { 
+    width: 100%; 
+    height: 80px; 
+    font-size: 22px; 
+    padding: 12px; 
+    border: 1px solid #ccc; 
+    border-radius: 6px; 
+    box-sizing: border-box; 
+}
+
+.ipa-sym { 
+    font-weight: bold; 
+    color: #d63384; 
+    font-size: 1.4rem; 
+    background-color: #fff0f6;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+/* ボタン・装飾 */
+button { 
+    margin-top: 15px; 
+    width: 100%; 
+    padding: 15px; 
+    font-size: 18px; 
+    background: #007bff; 
+    color: white; 
+    border: none; 
+    border-radius: 6px; 
+    cursor: pointer; 
+    font-weight: bold; 
+}
+
+.kana-display { 
+    font-size: 2.5rem; 
+    font-weight: bold; 
+    color: #007bff; 
+    text-align: center; 
+    margin-bottom: 20px; 
+    border-bottom: 2px solid #eee; 
+    padding-bottom: 10px; 
+}
+
+/* テーブル */
+table { width: 100%; border-collapse: collapse; }
+th, td { border: 1px solid #ddd; padding: 12px; text-align: center; }
+th { background-color: #f2f2f2; }
+.ipa-input-org { background:#e9ecef; color:#007bff; }
+
+/* 特殊スタイル */
+.small-char {
+    font-size: 0.55em;
+    color: #339fff;
+    vertical-align: 0em;
+    margin: 0 1px;
+}
+
+.option-area {
+    margin: 10px 0;
+    padding: 10px;
+    background: #f0f4f8;
+    border-radius: 6px;
+}
+
+/* 左サイドメニュー用スタイル */
+.side-menu {
+    width: 200px;
+    background-color: #343a40;
+    color: white;
+    height: 100vh;
+    position: sticky;
+    top: 0;
+    padding: 20px 0;
+}
+
+.side-menu ul {
+    list-style: none;
+    padding: 0;
+}
+
+.side-menu li a {
+    color: #adb5bd;
+    text-decoration: none;
+    padding: 10px 20px;
+    display: block;
+}
+
+.side-menu li a:hover {
+    background-color: #495057;
+    color: white;
+}
