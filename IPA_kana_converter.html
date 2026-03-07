@@ -401,9 +401,9 @@ function processIPA(isAuto = false) {
     }
 
     // --- STEP 1.5: 子音が連続する場合、前の方を「ッ」に置換 ---
-    // n, m, y, w 以外の子音が次に続くなら、今の文字を「ッ」にする
+    // n, m以外の子音が次に続くなら、今の文字を「ッ」にする
     let fastIntermediate = "";
-    const cons = "bcdfghjklpqrstvxzʦʣʧʃj";
+    const cons = "bcdfghjklpqrstvwxyzʦʣʧʃj";
 
     // 同一とみなすペアの正規表現置換（長いものから順に）
     // 例: tʦ → ʦʦ, tʧ → ʧʧ, dʣ → ʣ高度, zj → jj, sʃ → ʃʃ
@@ -417,9 +417,11 @@ function processIPA(isAuto = false) {
     for (let j = 0; j < intermediate.length; j++) {
         let curr = normalized[j];
         let next = normalized[j+1];
-        if (next && curr === next && cons.includes(next) && cons.includes(curr) && curr !== "n" && curr !== "m") {
+        if (next && curr === next && cons.includes(next) && cons.includes(curr) && curr !== "n" && curr !== "m" && curr !== "w" && curr !== "y") {
             fastIntermediate += "ッ";
-        } else {
+        } else if (next && curr === next && cons.includes(next) && cons.includes(curr) && (curr === "w" || curr === "y")) {
+            fastIntermediate += "";
+        else {
             fastIntermediate += curr;
         }
     }
@@ -443,7 +445,7 @@ function processIPA(isAuto = false) {
         if (curr === "ッ") { finalKana += "ッ"; i++; continue; }
 
         // 1. 鼻音（mb/mp）の処理
-        if (curr === "m" && (next === "b" || next === "p")) {
+        if (curr === "m" && (next === "m" || next === "b" || next === "p")) {
             finalKana += "ン";
             i++;
             continue; 
