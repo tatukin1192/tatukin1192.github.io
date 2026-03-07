@@ -39,18 +39,20 @@ body {
     color: white;
 }
 
-/* メインコンテンツの外枠 */
 .main-content {
-    flex: 1;
+    flex: 1;            /* 残りの幅をすべて占める */
+    display: flex;      /* 子要素（カード）を配置するためにflex化 */
+    justify-content: center; /* 水平方向の中央寄せ */
     padding: 20px; 
+    background-color: #f8f9fa;
 }
 
-/* 汎用コンテナ（カードのような見た目） */
 .container { 
     background: white; 
     padding: 25px; 
     border-radius: 10px; 
     box-shadow: 0 2px 15px rgba(0,0,0,0.1); 
-    max-width: 800px;
-    margin: 0 auto;
+    width: 100%;        /* 基本は幅いっぱい */
+    max-width: 800px;   /* ただし800px以上には広げない */
+    height: fit-content; /* 中身の高さに合わせる */
 }
