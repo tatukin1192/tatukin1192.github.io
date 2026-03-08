@@ -1,57 +1,89 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IPA→カタカナ変換</title>
     <style>
-
-        /* 1. 全体設定にIPA向けのフォントファミリーを追加 */
-        body { 
-            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif; 
-            max-width: 800px; 
-            margin: 20px auto; 
-            padding: 20px; 
-            background-color: #f8f9fa; 
-            color: #333; 
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+            color: #333;
         }
-        
-        /* 2. IPA入力欄のフォントを最適化 */
-        textarea#ipaInput { 
-            width: 100%; 
-            height: 80px; 
-            font-size: 22px; 
-            padding: 12px; 
-            border: 1px solid #ccc; 
-            border-radius: 6px; 
-            box-sizing: border-box; 
-            /* IPA表示に強いフォントを優先指定 */
+
+        textarea#ipaInput {
+            width: 100%;
+            height: 80px;
+            font-size: 22px;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
             font-family: "Charis SIL", "Doulos SIL", "Gentium Plus", "Lucida Sans Unicode", "Segoe UI Symbol", "Arial Unicode MS", serif;
         }
 
-        /* 3. 表の中のIPA記号部分 */
-        .ipa-sym { 
-            font-weight: bold; 
-            color: #d63384; 
-            font-size: 1.4rem; 
-            /* こちらもIPA向けフォントを適用 */
-            font-family: "Charis SIL", "Doulos SIL", "Gentium Plus", "Lucida Sans Unicode", "Segoe UI Symbol", "Arial Unicode MS", serif;
-            background-color: #fff0f6;
-            padding: 2px 6px;
-            border-radius: 4px;
+        textarea {
+            width: 100%;
+            height: 80px;
+            font-size: 20px;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
         }
 
-        .container { background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 15px rgba(0,0,0,0.1); }
-        textarea { width: 100%; height: 80px; font-size: 20px; padding: 12px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; }
-        button { margin-top: 15px; width: 100%; padding: 15px; font-size: 18px; background: #007bff; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
-        #resultArea { margin-top: 30px; }
-        .kana-display { font-size: 2.5rem; font-weight: bold; color: #007bff; text-align: center; margin-bottom: 20px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { border: 1px solid #ddd; padding: 12px; text-align: center; }
-        th { background-color: #f2f2f2; }
-        .ipa-input-org { background:#e9ecef; color:#007bff; }
+        button {
+            margin-top: 15px;
+            width: 100%;
+            padding: 15px;
+            font-size: 18px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
 
-        /* 追加：子音を小さく表示するためのスタイル */
+        #resultArea {
+            margin-top: 30px;
+        }
+
+        .kana-display {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #007bff;
+            text-align: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .ipa-input-org {
+            background: #e9ecef;
+            color: #007bff;
+        }
+
         .small-char {
             font-size: 0.55em;
             color: #339fff;
@@ -65,500 +97,552 @@
             background: #f0f4f8;
             border-radius: 6px;
         }
+
+        .ipa-sym {
+            font-weight: bold;
+            color: #d63384;
+            font-size: 1.4rem;
+            font-family: "Charis SIL", "Doulos SIL", "Gentium Plus", "Lucida Sans Unicode", "Segoe UI Symbol", "Arial Unicode MS", serif;
+            background-color: #fff0f6;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .ipa-sym a {
+            display: block;
+            width: 100%;
+            height: 100%;
+            box-sizing: border-box;
+            color: inherit;
+
+        }
+
+        .ipa-sym a:hover {
+            color: #007bff;
+            background-color: #ff6;
+        }
+
+        .container {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+        }
     </style>
 </head>
+
 <body>
 
-<div class="container">
-    <h2>IPA→カタカナ変換</h2>
-    <p>Geminiに作らせたものを改良した簡易的なものです</p>
-    <p>※カタカナ表記は目安あり、一例です</p>
-    <textarea id="ipaInput" placeholder="IPA記号を入力してください"></textarea>
-    <button onclick="processIPA()">変換</button>
+    <div class="container">
+        <h2>IPA→カタカナ変換</h2>
+        <p>Geminiに作らせたものを改良した簡易的なものです</p>
+        <p>※カタカナ表記は目安あり、一例です</p>
+        <textarea id="ipaInput" placeholder="IPA記号を入力してください"></textarea>
+        <button onclick="processIPA()">変換</button>
 
-<div class="option-area">
-    <input type="checkbox" id="smallConsonant" onchange="processIPA()">
-    <label for="smallConsonant">子音のみの場合に文字を小さく表示する</label>
-</div>
+        <div class="option-area">
+            <input type="checkbox" id="smallConsonant" onchange="processIPA()">
+            <label for="smallConsonant">子音のみの場合に文字を小さく表示する</label>
+        </div>
 
-    <div id="resultArea" style="display:none;">
-        <div class="kana-display" id="kanaOutput"></div>
-        <table>
-            <thead>
-                <tr>
-                    <th>記号</th>
-                    <th>発音の解説</th>
-                </tr>
-            </thead>
-            <tbody id="explanationBody"></tbody>
-        </table>
+        <div id="resultArea" style="display:none;">
+            <div class="kana-display" id="kanaOutput"></div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>記号</th>
+                        <th>発音の解説</th>
+                    </tr>
+                </thead>
+                <tbody id="explanationBody"></tbody>
+            </table>
+        </div>
     </div>
-</div>
 
 
-<script>
-// 1. IPA → 日本語音素マッピングの拡充
-const ipaToJpMap = {
-    // 母音
-    "i": "i", "y": "yu", "ɨ": "wi", "ʉ": "u", "ɯ": "u", "u": "u",
-    "ɪ": "i", "ʏ": "u", "ʊ": "u",
-    "e": "e", "ø": "u", "ɘ": "e", "ɵ": "o", "ɤ": "u", "o": "o",
-    "ə": "a",  
-    "ɛ": "e", "œ": "e", "ɜ": "a", "ɞ": "a", "ʌ": "a", "ɔ": "o",
-    "æ": "ya", "ɐ": "a", 
-    "a": "a", "ɶ": "a", "ä": "a", "ɑ": "a", "ɒ": "o", 
+    <script>
+        // IPA→簡素音素　日本語に変換する前準備
+        const ipaToJpMap = {
+            // 母音
+            "i": "i", "y": "yu", "ɨ": "wi", "ʉ": "u", "ɯ": "u", "u": "u",
+            "ɪ": "i", "ʏ": "u", "ʊ": "u",
+            "e": "e", "ø": "u", "ɘ": "e", "ɵ": "o", "ɤ": "u", "o": "o",
+            "ə": "a",
+            "ɛ": "e", "œ": "e", "ɜ": "a", "ɞ": "a", "ʌ": "a", "ɔ": "o",
+            "æ": "ya", "ɐ": "a",
+            "a": "a", "ɶ": "a", "ä": "a", "ɑ": "a", "ɒ": "o",
 
-    // 子音
-    "p": "p", "b": "b", "t": "t", "d": "d", "ʈ": "t", "ɖ": "d", "c": "ky", "ɟ": "gy", "k": "k", "ɡ": "g", "q": "k", "ɢ": "g", "ʡ": "h", "ʔ": "ッ",
-    "m": "m", "ɱ": "m", "n": "n", "ŋ": "ŋ", "ɲ": "ny", "ɳ": "n", "ɴ": "ン", "ɰ̃": "ン",
-    "ʙ̥": "p", "ʙ": "b", "r": "r", "ʀ": "r",
-    "ⱱ" : "v", "ɾ": "r", "ɽ": "r",
-    "ɸ": "f", "β": "v", "f": "f", "v": "v", "θ": "s", "ð": "z", "s": "s", "z": "z", "ʃ": "ʃ", "ʒ": "j", "ʂ": "ʃ", "ʐ": "j", "ç": "hy", "ʝ": "y", "x": "h", "ɣ": "g", "χ": "h", "ʁ": "g", "ħ": "h", "ʕ": "h", "h": "h", "ɦ": "h", 
-    "ɬ": "ʃ", "ɮ": "j",
-    "β̞": "w", "ʋ": "w", "ɹ": "r", "ɻ": "r", "j": "y", "ɰ": "w",
-    "l": "r", "ɭ": "r", "ʎ": "j", "ʟ": "r",
-    
-    "w": "w", "ɥ": "yu", "ʍ": "w",
-    "ʲ": "y", "ʷ": "w",
-    
-    "ɕ": "ʃ", "ʑ": "j",
-    "t͡s": "ʦ", "d͡z": "ʣ", "t͡ʃ": "ʧ", "d͡ʒ": "j", "t͡ɕ": "ʧ", "d͡ʑ": "j", "t͡ɬ": "ʧ", "d͡ɮ": "j",
-    
-    "ʜ": "h", "ʢ": "h", "ɧ": "h", "ɺ": "r", "ɫ": "r",
-    
-    // 入破音
-    "ɓ": "b", "ɗ": "d", "ʄ": "gy", "ɠ": "g", "ʛ": "g", "ᶑ": "d",
-    "ɓ̥": "p", "ɗ̥": "t", "ʄ̊": "ky", "ɠ̊": "k", "ʛ̥": "k", "ᶑ̊": "t", 
-    
-    // 鼻母音（母音 + n/nn の形に変換）
-    "ã": "an", "ẽ": "en", "ĩ": "in", "õ": "on", "ũ": "un",
-    "ɛ̃": "en", "œ̃": "en", "ɔ̃": "on", "ɑ̃": "an",
-    // 特殊
-    "ː": "ー", "ʼ": "",
-};
+            // 子音
+            "p": "p", "b": "b", "t": "t", "d": "d", "ʈ": "t", "ɖ": "d", "c": "ky", "ɟ": "gy", "k": "k", "ɡ": "g", "q": "k", "ɢ": "g", "ʡ": "h", "ʔ": "ッ",
+            "m": "m", "ɱ": "m", "n": "n", "ŋ": "ŋ", "ɲ": "ny", "ɳ": "n", "ɴ": "ン", "ɰ̃": "ン",
+            "ʙ̥": "p", "ʙ": "b", "r": "r", "ʀ": "r",
+            "ⱱ": "v", "ɾ": "r", "ɽ": "r",
+            "ɸ": "f", "β": "v", "f": "f", "v": "v", "θ": "s", "ð": "z", "s": "s", "z": "z", "ʃ": "ʃ", "ʒ": "j", "ʂ": "ʃ", "ʐ": "j", "ç": "hy", "ʝ": "y", "x": "h", "ɣ": "g", "χ": "h", "ʁ": "g", "ħ": "h", "ʕ": "h", "h": "h", "ɦ": "h",
+            "ɬ": "ʃ", "ɮ": "j",
+            "β̞": "w", "ʋ": "w", "ɹ": "r", "ɻ": "r", "j": "y", "ɰ": "w",
+            "l": "r", "ɭ": "r", "ʎ": "j", "ʟ": "r",
 
-// --- 追加：表記ゆれ正規化マップ ---
-const ipaNormalizeMap = {
-    "ts": "t͡s", "t͜s": "t͡s", "ʦ": "t͡s", "ƾ": "t͡s",
-    "dz": "d͡z", "d͜z": "d͡z", "ʣ": "d͡z",
-    "tʃ": "t͡ʃ", "t͜ʃ": "t͡ʃ", "ʧ": "t͡ʃ",
-    "dʒ": "d͡ʒ", "d͜ʒ": "d͡ʒ", "ʤ": "d͡ʒ",
-    "tɕ": "t͡ɕ", "t͜ɕ": "t͡ɕ",
-    "dʑ": "d͡ʑ", "d͜ʑ": "d͡ʑ",
-    "tɬ": "t͡ɬ", "t͜ɬ": "t͡ɬ", "ƛ": "t͡ɬ",
-    "dɮ": "d͡ɮ", "d͜ɮ": "d͡ɮ", "λ": "d͡ɮ",
-    "g": "ɡ",
-    "ƥ": "ɓ̥", "ƭ": "ɗ̥", "ƈ": "ʄ̊", "ƙ": "ɠ̊", "ʠ": "ʛ̥",
-    ":": "ː",
-};
+            "w": "w", "ɥ": "yu", "ʍ": "w",
+            "ʲ": "y", "ʷ": "w",
 
-// 2. 日本語音素 → カタカナ（拗音・外来語をさらに追加）
-const jpToKana = {
-    "a":"ア", "i":"イ", "u":"ウ", "e":"エ", "o":"オ",
-    "ka":"カ", "ki":"キ", "ku":"ク", "ke":"ケ", "ko":"コ", "kー":"ッk",
-    "ga":"ガ", "gi":"ギ", "gu":"グ", "ge":"ゲ", "go":"ゴ",
-    "ŋa":"ガ", "ŋi":"ギ", "ŋu":"グ", "ŋe":"ゲ", "ŋo":"ゴ",
-    "sa":"サ", "si":"スィ", "su":"ス", "se":"セ", "so":"ソ",
-    "za":"ザ", "zi":"ズィ", "zu":"ズ", "ze":"ゼ", "zo":"ゾ",
-    "ta":"タ", "ti":"ティ", "tu":"トゥ", "te":"テ", "to":"ト",
-    "da":"ダ", "di":"ディ", "du":"ドゥ", "de":"デ", "do":"ド",
-    "na":"ナ", "ni":"ニ", "nu":"ヌ", "ne":"ネ", "no":"ノ",
-    "ha":"ハ", "hi":"ヒ", "hu":"フ", "he":"ヘ", "ho":"ホ",
-    "ba":"バ", "bi":"ビ", "bu":"ブ", "be":"ベ", "bo":"ボ",
-    "pa":"パ", "pi":"ピ", "pu":"プ", "pe":"ペ", "po":"ポ",
-    "ma":"マ", "mi":"ミ", "mu":"ム", "me":"メ", "mo":"モ",
-    "ya":"ヤ", "yi":"イィ", "yu":"ユ", "ye":"イェ", "yo":"ヨ",
-    "ra":"ラ", "ri":"リ", "ru":"ル", "re":"レ", "ro":"ロ",
-    "wa":"ワ", "wi":"ウィ", "wu":"ウゥ", "we":"ウェ", "wo":"ウォ",
-    "ン":"ン", "ッ":"ッ", "ー":"ー",
-    // 拗音（キャ行・ギャ行など）
-    "kya":"キャ", "kyi":"キ", "kyu":"キュ", "kye":"キェ", "kyo":"キョ",
-    "gya":"ギャ", "gyi":"ギ", "gyu":"ギュ", "gye":"ギェ", "gyo":"ギョ",
-    "ŋya":"ギャ", "ŋyi":"ギ", "ŋyu":"ギュ", "ŋye":"ギェ", "ŋyo":"ギョ",
-    "nya":"ニャ", "nyi":"ニ", "nyu":"ニュ", "nye":"ニェ", "nyo":"ニョ",
-    "hya":"ヒャ", "hyi":"ヒ", "hyu":"ヒュ", "hye":"ヒェ", "hyo":"ヒョ",
-    "mya":"ミャ", "myi":"ミ", "myu":"ミュ", "mye":"ミェ", "myo":"ミョ",
-    "rya":"リャ", "ryi":"リ", "ryu":"リュ", "rye":"リェ", "ryo":"リョ",
-    "pya":"ピャ", "pyi":"ピ", "pyu":"ピュ", "pye":"ピェ", "pyo":"ピョ",
-    "bya":"ビャ", "byi":"ビ", "byu":"ビュ", "bye":"ビェ", "byo":"ビョ",
-    // 英語・外来語用
-    "ʃa":"シャ", "ʃi":"シ", "ʃu":"シュ", "ʃe":"シェ", "ʃo":"ショ",
-    "ʧa":"チャ", "ʧi":"チ", "ʧu":"チュ", "ʧe":"チェ", "ʧo":"チョ",
-    "ja":"ジャ", "ji":"ジ", "ju":"ジュ", "je":"ジェ", "jo":"ジョ",
-    "fa":"ファ", "fi":"フィ", "fu":"フ", "fe":"フェ", "fo":"フォ",
-    "va":"ヴァ", "vi":"ヴィ", "vu":"ヴ", "ve":"ヴェ", "vo":"ヴォ",
-    "ʦa":"ツァ", "ʦi":"ツィ", "ʦu":"ツ", "ʦe":"ツェ", "ʦo":"ツォ",
-    "ʣa":"ザ", "ʣi":"ズィ", "ʣu":"ズ", "ʣe":"ゼ", "ʣo":"ゾ",
-    "tya":"テャ", "tyi":"ティ", "tyu":"テュ", "tye":"ティェ", "tyo":"テョ",
-    "dya":"デャ", "dyi":"ディ", "dyu":"デュ", "dye":"ディェ", "dyo":"デョ",
-    "kwa":"クァ", "kwi":"クィ", "kwu":"ク", "kwe":"クェ", "kwo":"クォ",
-    "gwa":"グァ", "gwi":"グィ", "gwu":"グ", "gwe":"グェ", "gwo":"グォ",
-    "sya":"スャ", "syi":"スィ", "syu":"スュ", "sye":"スィェ", "syo":"スョ",
-    // 子音単独
-    "k":"ク", "g":"グ", "s":"ス", "z":"ズ", "t":"ト", "d":"ド", 
-    "n":"ン", "h":"フ", "f":"フ", "b":"ブ", "p":"プ", "m":"ム", 
-    "y":"ィ", "r":"ル", "l":"ル", "v":"ヴ", "w":"ゥ", "th":"ス", "dh":"ズ",
-    "ʃ":"シュ", "ʧ":"チュ", "j":"ジュ", "ʦ":"ツ", "ʣ":"ズ", "ny":"ン", "ŋ":"ン",
-};
-// 3. 解説データの拡充
-const ipaDesc = {
-// 母音
-    "i": "日本語の「イ」に近い音",
-    "y": "「ウ」の口で「イ」と発音する音",
-    "ɨ": "「イ」と「ウ」の中間で、唇を丸めない音",
-    "ʉ": "「イ」と「ウ」の中間で、唇を丸める音",
-    "ɯ": "日本語の「ウ」に近いが、唇を丸めない音",
-    "u": "日本語の「ウ」より唇を丸める音",
+            "ɕ": "ʃ", "ʑ": "j",
+            "t͡s": "ʦ", "d͡z": "ʣ", "t͡ʃ": "ʧ", "d͡ʒ": "j", "t͡ɕ": "ʧ", "d͡ʑ": "j", "ʈ͡ʂ": "ʧ", "ɖ͡ʐ": "j", "t͡ɬ": "ʧ", "d͡ɮ": "j",
 
-    "ɪ": "少し「エ」に近い、短い「イ」の音",
-    "ʊ": "少し「オ」に近い、短い「ウ」の音",
+            "ʜ": "h", "ʢ": "h", "ɧ": "h", "ɺ": "r", "ɫ": "r",
 
-    "e": "日本語の「エ」に近い音",
-    "ø": "",
-    "ɘ": "",
-    "ɵ": "",
-    "ɤ": "",
-    "o": "日本語の「オ」に近い音",
+            // 入破音
+            "ɓ": "b", "ɗ": "d", "ʄ": "gy", "ɠ": "g", "ʛ": "g", "ᶑ": "d",
+            "ɓ̥": "p", "ɗ̥": "t", "ʄ̊": "ky", "ɠ̊": "k", "ʛ̥": "k", "ᶑ̊": "t",
 
-    "ə": "曖昧な母音",
+            // 鼻母音
+            "ã": "aン", "ẽ": "eン", "ĩ": "iン", "õ": "oン", "ũ": "uン",
+            "̃": "ン",
 
-    "ɛ": "",
-    "œ": "",
-    "ɜ": "",
-    "ɞ": "",
-    "ʌ": "",
-    "ɔ": "",
+            // 特殊
+            "ː": "ー", "ʼ": "", "˞": "ー",
+        };
 
+        // 表記ゆれ正規化
+        const ipaNormalizeMap = {
+            "ts": "t͡s", "t͜s": "t͡s", "ʦ": "t͡s", "ƾ": "t͡s",
+            "dz": "d͡z", "d͜z": "d͡z", "ʣ": "d͡z",
+            "tʃ": "t͡ʃ", "t͜ʃ": "t͡ʃ", "ʧ": "t͡ʃ",
+            "dʒ": "d͡ʒ", "d͜ʒ": "d͡ʒ", "ʤ": "d͡ʒ",
+            "tɕ": "t͡ɕ", "t͜ɕ": "t͡ɕ",
+            "dʑ": "d͡ʑ", "d͜ʑ": "d͡ʑ",
+            "ʈ͜ʂ": "ʈ͡ʂ", "tʂ": "ʈ͡ʂ", "t͡ʂ": "ʈ͡ʂ", "t͜ʂ": "ʈ͡ʂ", "tʂ": "ʈ͡ʂ",
+            "ɖ͜ʐ": "ɖ͡ʐ", "ɖʐ": "ɖ͡ʐ", "d͡ʐ": "ɖ͡ʐ", "d͜ʐ": "ɖ͡ʐ", "dʐ": "ɖ͡ʐ",
+            "tɬ": "t͡ɬ", "t͜ɬ": "t͡ɬ", "ƛ": "t͡ɬ",
+            "dɮ": "d͡ɮ", "d͜ɮ": "d͡ɮ", "λ": "d͡ɮ",
+            "g": "ɡ",
+            "ɚ": "ə˞", "ɝ": "ɜ˞",
+            "ƥ": "ɓ̥", "ƭ": "ɗ̥", "ƈ": "ʄ̊", "ƙ": "ɠ̊", "ʠ": "ʛ̥",
+            "͜": "͡",
+            ":": "ː",
+        };
 
-    "æ": "「ア」と「エ」の中間の音",
-    "ɐ": "",
+        // 簡素音素→カタカナ
+        const jpToKana = {
+            "a": "ア", "i": "イ", "u": "ウ", "e": "エ", "o": "オ",
+            "ka": "カ", "ki": "キ", "ku": "ク", "ke": "ケ", "ko": "コ", "kー": "ッk",
+            "ga": "ガ", "gi": "ギ", "gu": "グ", "ge": "ゲ", "go": "ゴ",
+            "ŋa": "ガ", "ŋi": "ギ", "ŋu": "グ", "ŋe": "ゲ", "ŋo": "ゴ",
+            "sa": "サ", "si": "スィ", "su": "ス", "se": "セ", "so": "ソ",
+            "za": "ザ", "zi": "ズィ", "zu": "ズ", "ze": "ゼ", "zo": "ゾ",
+            "ta": "タ", "ti": "ティ", "tu": "トゥ", "te": "テ", "to": "ト",
+            "da": "ダ", "di": "ディ", "du": "ドゥ", "de": "デ", "do": "ド",
+            "na": "ナ", "ni": "ニ", "nu": "ヌ", "ne": "ネ", "no": "ノ",
+            "ha": "ハ", "hi": "ヒ", "hu": "フ", "he": "ヘ", "ho": "ホ",
+            "ba": "バ", "bi": "ビ", "bu": "ブ", "be": "ベ", "bo": "ボ",
+            "pa": "パ", "pi": "ピ", "pu": "プ", "pe": "ペ", "po": "ポ",
+            "ma": "マ", "mi": "ミ", "mu": "ム", "me": "メ", "mo": "モ",
+            "ya": "ヤ", "yi": "イィ", "yu": "ユ", "ye": "イェ", "yo": "ヨ",
+            "ra": "ラ", "ri": "リ", "ru": "ル", "re": "レ", "ro": "ロ",
+            "wa": "ワ", "wi": "ウィ", "wu": "ウゥ", "we": "ウェ", "wo": "ウォ",
+            "ン": "ン", "ッ": "ッ", "ー": "ー",
+            // 拗音
+            "kya": "キャ", "kyi": "キ", "kyu": "キュ", "kye": "キェ", "kyo": "キョ",
+            "gya": "ギャ", "gyi": "ギ", "gyu": "ギュ", "gye": "ギェ", "gyo": "ギョ",
+            "ŋya": "ギャ", "ŋyi": "ギ", "ŋyu": "ギュ", "ŋye": "ギェ", "ŋyo": "ギョ",
+            "nya": "ニャ", "nyi": "ニ", "nyu": "ニュ", "nye": "ニェ", "nyo": "ニョ",
+            "hya": "ヒャ", "hyi": "ヒ", "hyu": "ヒュ", "hye": "ヒェ", "hyo": "ヒョ",
+            "mya": "ミャ", "myi": "ミ", "myu": "ミュ", "mye": "ミェ", "myo": "ミョ",
+            "rya": "リャ", "ryi": "リ", "ryu": "リュ", "rye": "リェ", "ryo": "リョ",
+            "pya": "ピャ", "pyi": "ピ", "pyu": "ピュ", "pye": "ピェ", "pyo": "ピョ",
+            "bya": "ビャ", "byi": "ビ", "byu": "ビュ", "bye": "ビェ", "byo": "ビョ",
+            // 英語・外来語用
+            "ʃa": "シャ", "ʃi": "シ", "ʃu": "シュ", "ʃe": "シェ", "ʃo": "ショ",
+            "ʧa": "チャ", "ʧi": "チ", "ʧu": "チュ", "ʧe": "チェ", "ʧo": "チョ",
+            "ja": "ジャ", "ji": "ジ", "ju": "ジュ", "je": "ジェ", "jo": "ジョ",
+            "fa": "ファ", "fi": "フィ", "fu": "フ", "fe": "フェ", "fo": "フォ",
+            "va": "ヴァ", "vi": "ヴィ", "vu": "ヴ", "ve": "ヴェ", "vo": "ヴォ",
+            "ʦa": "ツァ", "ʦi": "ツィ", "ʦu": "ツ", "ʦe": "ツェ", "ʦo": "ツォ",
+            "ʣa": "ザ", "ʣi": "ズィ", "ʣu": "ズ", "ʣe": "ゼ", "ʣo": "ゾ",
+            "tya": "テャ", "tyi": "ティ", "tyu": "テュ", "tye": "ティェ", "tyo": "テョ",
+            "dya": "デャ", "dyi": "ディ", "dyu": "デュ", "dye": "ディェ", "dyo": "デョ",
+            "kwa": "クァ", "kwi": "クィ", "kwu": "ク", "kwe": "クェ", "kwo": "クォ",
+            "gwa": "グァ", "gwi": "グィ", "gwu": "グ", "gwe": "グェ", "gwo": "グォ",
+            "sya": "スャ", "syi": "スィ", "syu": "スュ", "sye": "スィェ", "syo": "スョ",
+            // 子音単独
+            "k": "ク", "g": "グ", "s": "ス", "z": "ズ", "t": "ト", "d": "ド",
+            "n": "ン", "h": "フ", "f": "フ", "b": "ブ", "p": "プ", "m": "ム",
+            "y": "ィ", "r": "ル", "l": "ル", "v": "ヴ", "w": "ゥ",
+            "ʃ": "シュ", "ʧ": "チュ", "j": "ジュ", "ʦ": "ツ", "ʣ": "ズ", "ny": "ン", "ŋ": "ン",
+        };
+        // 解説データ
+        const ipaDesc = {
+            // 母音
+            "i": ["日本語の「イ」に近い音", "非円唇前舌狭母音"],
+            "y": ["「ウ」の口で「イ」と発音する音", "円唇前舌狭母音"],
+            "ɨ": ["「イ」と「ウ」の中間で、唇を丸めない音", "非円唇中舌狭母音"],
+            "ʉ": ["「イ」と「ウ」の中間で、唇を丸める音", "円唇中舌狭母音"],
+            "ɯ": ["日本語の「ウ」に近いが、唇を丸めない音", "非円唇後舌狭母音"],
+            "u": ["日本語の「ウ」より唇を丸める音", "円唇後舌狭母音"],
 
-    "a": "日本語の「ア」に近い音",
-    "ɶ": "",
-    "ä": "日本語の「ア」に近い音",
-    "ɑ": "",
-    "ɒ": "",
+            "ɪ": ["少し「エ」に近い、短い「イ」の音", "非円唇前舌め広めの狭母音"],
+            "ʏ": ["", "円唇前舌め広めの狭母音"],
+            "ʊ": ["少し「オ」に近い、短い「ウ」の音", "円唇後舌め広めの狭母音"],
+
+            "e": ["日本語の「エ」に近い音", "非円唇前舌半狭母音"],
+            "ø": ["「ウ」の口で「エ」と発音する音", "円唇前舌半狭母音"],
+            "ɘ": ["", "非円唇中舌半狭母音"],
+            "ɵ": ["", "円唇中舌半狭母音"],
+            "ɤ": ["", "非円唇後舌半狭母音"],
+            "o": ["日本語の「オ」に近い音", "円唇後舌半狭母音"],
+
+            "ə": ["曖昧な母音", "シュワー"],
+
+            "ɛ": ["", "非円唇前舌半広母音"],
+            "œ": ["", "円唇前舌半広母音"],
+            "ɜ": ["", "非円唇中舌半広母音"],
+            "ɞ": ["", "円唇中舌半広母音"],
+            "ʌ": ["", "非円唇後舌半広母音"],
+            "ɔ": ["", "円唇後舌半広母音"],
 
 
-// 子音（破裂音）
-    "p": "日本語のパ行の子音",
-    "b": "日本語のバ行の子音",
-    "k": "日本語のカ行の子音",
-    "ɡ": "日本語のガ行の子音",
-    "t": "日本語のタ行の子音",
-    "d": "日本語のダ行の子音",
-    "ʔ": "",
+            "æ": ["「ア」と「エ」の中間の音", "非円唇前舌狭めの広母音"],
+            "ɐ": ["", "中舌狭めの広母音"],
 
-    // 子音（鼻音）
-    "m": "日本語のマ行の子音",
-    "n": "日本語のナ行の子音",
-    "ɲ": "日本語の「ニ」やニャ行の子音",
-    "ŋ": "日本語のカ行やガ行の前の「ン」の音",
-    "ɴ": "日本語の「ン」を単独で発音した際の音",
-    "ɰ̃": "日本語の母音や半母音の前の「ン」の音",
-
-    // 子音（ふるえ、はじき音）
-    "ʙ": "唇を震わせて、バ行のように発音する子音",
-    "ʙ̥": "唇を震わせて、パ行のように発音する子音",
-    "r": "舌を震わせて発音する、巻き舌のR",
-    "ɾ": "日本語のラ行の子音",
-
-    // 子音（摩擦音）
-    "ɸ": "日本語の「フ」やファ行の子音",
-    "β": "",
-    "f": "",
-    "v": "",
-    "θ": "舌を噛んで、サ行のように発音する子音",
-    "ð": "舌を噛んで、ザ行のように発音する子音",
-    "s": "日本語のサ行の子音",
-    "z": "日本語のザ行の子音",
-    "ʃ": "",
-    "ʒ": "",
-    "ɕ": "日本語の「シ」やシャ行の子音",
-    "ʑ": "日本語の「ジ」やジャ行の子音",
-    "ç": "日本語の「ヒ」やヒャ行の子音",
-    "h": "日本語のハ行の子音",
+            "a": ["日本語の「ア」に近い音", "非円唇前舌広母音"],
+            "ɶ": ["", "円唇前舌広母音"],
+            "ä": ["日本語の「ア」に近い音", "非円唇中舌広母音"],
+            "ɑ": ["", "非円唇後舌広母音"],
+            "ɒ": ["", "円唇後舌広母音"],
 
 
-    // 子音（接近音など）
-    "β̞": "日本語のワ行の子音",
-    "w": "日本語のワ行より唇を丸める子音",
-    "l": "舌を歯茎に付けて、ラ行のように発音する子音",
-    "ɹ": "",
-    "j": "日本語のヤ行の子音",
+            // 子音（破裂音）
+            "p": ["日本語のパ行の子音", "無声両唇破裂音"],
+            "b": ["日本語のバ行の子音", "有声両唇破裂音"],
+            "t": ["日本語のタ行の子音", "無声歯茎破裂音"],
+            "d": ["日本語のダ行の子音", "有声歯茎破裂音"],
+            "ʈ": ["舌を丸めて歯茎より少し後ろに当ててタ行のように発音する子音", "無声そり舌破裂音"],
+            "ɖ": ["舌を丸めて歯茎より少し後ろに当ててダ行のように発音する子音", "有声そり舌破裂音"],
+            "c": ["", "無声硬口蓋破裂音"],
+            "ɟ": ["", "有声硬口蓋破裂音"],
+            "k": ["日本語のカ行の子音", "無声軟口蓋破裂音"],
+            "ɡ": ["日本語のガ行の子音", "有声軟口蓋破裂音"],
+            "c": ["", "無声口蓋垂破裂音"],
+            "ɟ": ["", "有声口蓋垂破裂音"],
+            "ʔ": ["", "声門破裂音"],
 
-    // 特殊・補助
-    "ː": "直前の音を伸ばす",
+            // 子音（鼻音）
+            "m": ["日本語のマ行の子音", "両唇鼻音"],
+            "n": ["日本語のナ行の子音", "歯茎鼻音"],
+            "ɳ": ["", "そり舌鼻音"],
+            "ɲ": ["日本語の「ニ」やニャ行の子音", "硬口蓋鼻音"],
+            "ŋ": ["日本語のカ行やガ行の前の「ン」の音", "軟口蓋鼻音"],
+            "ɴ": ["日本語の「ン」を単独で発音した際の音", "口蓋垂鼻音"],
+            "ɰ̃": ["日本語の母音や半母音の前の「ン」の音", null],
 
-    // 破擦音
-    "d͡z": "",
-    "t͡s": "日本語の「ツ」の子音",
-    "t͡ʃ": "",
-    "d͡ʒ": "",
-    "t͡ɕ": "日本語の「チ」やチャ行の子音",
-    "d͡ʑ": "",
+            // 子音（ふるえ、はじき音）
+            "ʙ̥": ["唇を震わせて、パ行のように発音する子音", "無声両唇ふるえ音"],
+            "ʙ": ["唇を震わせて、バ行のように発音する子音", "両唇ふるえ音"],
+            "r": ["舌を震わせて発音する、巻き舌のR", "歯茎ふるえ音"],
+            "ɾ": ["日本語のラ行の子音", "有声歯・歯茎たたき音およびはじき音"],
 
-    // 補助記号
-    "ˈ": "第一アクセント。次に続く音節が最も強く読まれる",
-    "ˌ": "第二アクセント。次に続く音節がやや強く読まれる",
-    "̥": "無声化記号。有声音の下に付き、声帯を震わせないことを示す"};
+            // 子音（摩擦音）
+            "ɸ": ["日本語の「フ」やファ行の子音", "無声両唇摩擦音"],
+            "β": ["", "有声両唇摩擦音"],
+            "f": ["", "無声唇歯摩擦音"],
+            "v": ["", "有声唇歯摩擦音"],
+            "θ": ["舌を噛んで、サ行のように発音する子音", "無声歯摩擦音"],
+            "ð": ["舌を噛んで、ザ行のように発音する子音", "有声歯摩擦音"],
+            "s": ["日本語のサ行の子音", "無声歯茎摩擦音"],
+            "z": ["日本語のザ行の子音", "有声歯茎摩擦音"],
+            "ʃ": ["", "無声後部歯茎摩擦音"],
+            "ʒ": ["", "有声後部歯茎摩擦音"],
+            "ʂ": ["", "無声そり舌摩擦音"],
+            "ʐ": ["", "有声そり舌摩擦音"],
+            "ɕ": ["日本語の「シ」やシャ行の子音", "無声歯茎硬口蓋摩擦音"],
+            "ʑ": ["日本語の「ジ」やジャ行の子音", "有声歯茎硬口蓋摩擦音"],
+            "ç": ["日本語の「ヒ」やヒャ行の子音", "無声硬口蓋摩擦音"],
+            "h": ["日本語のハ行の子音", "無声声門摩擦音"],
+            "ɬ": ["", "無声歯茎側面摩擦音"],
+            "ɮ": ["", "有声歯茎側面摩擦音"],
 
-// トークナイズ処理（IPA辞書のキーが長い順にマッチングさせる）
-function tokenizeIPA(str) {
-    let tokens = [];
-    let i = 0;
-    const sortedIpaKeys = Object.keys(ipaToJpMap).sort((a, b) => b.length - a.length);
+            // 子音（接近音など）
+            "β̞": ["日本語のワ行の子音", "両唇接近音"],
+            "w": ["日本語のワ行より唇を丸める子音", "有声両唇軟口蓋接近音"],
+            "l": ["舌を歯茎に付けて、ラ行のように発音する子音", "有声歯・歯茎・後部歯茎側面接近音"],
+            "ɹ": ["", "有声歯茎・後部歯茎接近音"],
+            "j": ["日本語のヤ行の子音", "硬口蓋接近音"],
 
-    while (i < str.length) {
-        let match = null;
-        for (let key of sortedIpaKeys) {
-            if (str.substr(i, key.length) === key) {
-                match = key;
-                break;
-            }
-        }
-        if (match) {
-            tokens.push(match);
-            i += match.length;
-        } else {
-            // ここで空白や未定義文字が1文字ずつ入る
-            tokens.push(str[i]);
-            i++;
-        }
-    }
-    return tokens;
-}
+            // 破擦音
+            "t͡s": ["日本語の「ツ」の子音", "無声歯茎破擦音"],
+            "d͡z": ["日本語のザ行（ヅァ行）の子音", "有声歯茎破擦音"],
+            "t͡ʃ": ["", "無声後部歯茎破擦音"],
+            "d͡ʒ": ["", "有声後部歯茎破擦音"],
+            "ʈ͡ʂ": ["", "無声そり舌破擦音"],
+            "ɖ͡ʐ": ["", "有声そり舌破擦音"],
+            "t͡ɕ": ["日本語の「チ」やチャ行の子音", "無声歯茎硬口蓋破擦音"],
+            "d͡ʑ": ["日本語のジャ行（ヂャ行）の子音", "有声歯茎硬口蓋破擦音"],
+            "t͡ɬ": ["", "無声歯茎側面破擦音"],
+            "d͡ɮ": ["", "有声歯茎側面破擦音"],
 
-function processIPA(isAuto = false) {
-    const rawInput = document.getElementById('ipaInput').value;
-    const resultArea = document.getElementById('resultArea');
+            // 補助記号
+            "ː": ["直前の音を伸ばす", ""],
+            "ˈ": ["第一アクセント。次に続く音節が最も強く読まれる", ""],
+            "ˌ": ["第二アクセント。次に続く音節がやや強く読まれる", ""],
+            "̥": ["無声化記号。有声音の下に付き、声帯を震わせないことを示す", ""]
+        };
 
-    // チェックボックスからの自動更新(isAuto=true)かつ、入力が空または一度も変換していない場合は何もしない
-    if (isAuto && (rawInput.trim() === "" || resultArea.style.display === "none")) {
-        return;
-    }
+        // トークナイズ処理（IPA辞書のキーが長い順にマッチングさせる）
+        function tokenizeIPA(str) {
+            let tokens = [];
+            let i = 0;
+            const sortedIpaKeys = Object.keys(ipaToJpMap).sort((a, b) => b.length - a.length);
 
-    let normalizedInput = rawInput;
-
-    const sortedIpaKeys = Object.keys(ipaToJpMap).sort((a, b) => b.length - a.length);
-
-    // --- STEP 0: 表記の正規化 ---
-    const normKeys = Object.keys(ipaNormalizeMap).sort((a, b) => b.length - a.length);
-    normKeys.forEach(key => {
-        normalizedInput = normalizedInput.split(key).join(ipaNormalizeMap[key]);
-    });
-
-    // --- 追加：内部変換用の変数を分離 ---
-    let processingInput = normalizedInput;
-
-    // --- STEP 0.5: 子音 + ː を子音重ねに置換 (t͡sː -> t͡st͡s 等) ---
-    const consonantsOnly = "pbtdʈɖcɟkɡqɢʡʔmɱnŋɲɳɴʙrʀⱱɾɽɸβfvθðszʃʒʂʐçʝxɣχʁħʕhɦɬɮʋɹɻjɰlɭʎʟwɥʍɕʑɓɗʄɠʛᶑt͡sd͡zt͡ʃd͡ʒt͡ɕd͡ʑt͡ɬd͡ɮ";
-
-    for (const key of sortedIpaKeys) {
-        // keyが子音リストに含まれている場合のみ、重ね処理を行う
-        if (consonantsOnly.includes(key)) {
-            const target = key + "ː";
-            if (processingInput.includes(target)) {
-                processingInput = processingInput.split(target).join(key + key);
-            }
-        }
-    }
-
-    // --- STEP 1: 中間音素へ変換（知らない文字をスキップしつつ改行は保持） ---
-    let intermediate = "";
-    let tempInput = processingInput; // 内部変換用を使用
-
-    while (tempInput.length > 0) {
-        let matched = false;
-
-        // 改行はスキップせず保持
-        if (tempInput.startsWith("\n")) {
-            intermediate += "\n";
-            tempInput = tempInput.slice(1);
-            continue;
-        }
-
-        // 【追加】空白（半角・全角）を全角スペースとして保持
-        if (tempInput.startsWith(" ") || tempInput.startsWith("　")) {
-            intermediate += "　"; 
-            tempInput = tempInput.slice(1);
-            continue;
-        }
-
-        for (const key of sortedIpaKeys) {
-            if (tempInput.startsWith(key)) {
-                let val = ipaToJpMap[key];
-                intermediate += val;
-                tempInput = tempInput.slice(key.length);
-                matched = true;
-                break;
-            }
-        }
-        
-        if (!matched) {
-            // 知らない文字は "" として扱う（スキップ）
-            tempInput = tempInput.slice(1);
-        }
-    }
-
-    // --- STEP 1.5: 子音が連続する場合、前の方を「ッ」に置換 ---
-    // n, m以外の子音が次に続くなら、今の文字を「ッ」にする
-    let fastIntermediate = "";
-    const cons = "bcdfghjklpqrstvwxyzʦʣʧʃj";
-
-    // 同一とみなすペアの正規表現置換（長いものから順に）
-    // 例: tʦ → ʦʦ, tʧ → ʧʧ, dʣ → ʣ高度, zj → jj, sʃ → ʃʃ
-    let normalized = intermediate
-        .replace(/tʦ/g, "ʦʦ")
-        .replace(/tʧ/g, "ʧʧ")
-        .replace(/dʣ/g, "ʣʣ")
-        .replace(/zj/g, "jj")
-        .replace(/sʃ/g, "ʃʃ");
-
-    for (let j = 0; j < intermediate.length; j++) {
-        let curr = normalized[j];
-        let next = normalized[j+1];
-        if (next && curr === next && cons.includes(next) && cons.includes(curr) && curr !== "n" && curr !== "m" && curr !== "w" && curr !== "y") {
-            fastIntermediate += "ッ";
-        } else if (next && curr === next && cons.includes(next) && cons.includes(curr) && (curr === "w" || curr === "y")) {
-            fastIntermediate += "";
-        } else {
-            fastIntermediate += curr;
-        }
-    }
-    intermediate = fastIntermediate;
-
-    // --- STEP 2: カタカナ変換 ---
-    let finalKana = ""; 
-    let i = 0;
-    const vowels = "aiueo";
-    let lastChar = ""; // 直前の文字を保持
-    const isSmallConsonant = document.getElementById('smallConsonant').checked;
-    const singleConsonants = ["k", "g", "s", "z", "t", "d", "h", "f", "b", "p", "m", "r", "l", "v", "ʃ", "ʧ", "j", "ʦ", "ʣ"];
-
-    while (i < intermediate.length) {
-        let curr = intermediate[i];
-        let next = intermediate[i + 1];
-
-        // 特殊記号の処理
-        if (curr === " ") { finalKana += "　"; i++; continue; }
-        if (curr === "ー") { finalKana += "ー"; i++; continue; }
-        if (curr === "ッ") { finalKana += "ッ"; i++; continue; }
-
-        // 1. 鼻音（mb/mp）の処理
-        if (curr === "m" && (next === "m" || next === "b" || next === "p")) {
-            finalKana += "ン";
-            i++;
-            continue; 
-        }
-
-        // 2. 最大4文字のマッチング（tsaなどの外来語、サス/アツァス判定の核）
-        let match = null;
-        let matchedLen = 0;
-        let matchedKey = "";
-        for (let len = 4; len >= 1; len--) {
-            let chunk = intermediate.substr(i, len);
-            if (jpToKana[chunk]) {
-                match = jpToKana[chunk];
-                matchedLen = len;
-                matchedKey = chunk;
-                break;
-            }
-        }
-
-        if (match) {
-            let res = match;
-
-            // サイズ変更の判定
-            if (isSmallConsonant && singleConsonants.includes(matchedKey)) {
-                finalKana += `<span class="small-char">${match}</span>`;
-            } else {
-                finalKana += match;
-            }
-            i += matchedLen;
-        } else {
-            // --- フォールバック処理（マッチしなかった場合） ---
-            if (jpToKana[curr]) {
-                finalKana += jpToKana[curr];
-                i++;
-            } else {
-                finalKana += curr;
-                i++;
-            }
-        }
-    }
-    // 最後に innerHTML で出力（spanタグを有効にするため）
-    document.getElementById('kanaOutput').innerHTML = finalKana;
-
-    // --- STEP 3: 解説表示 (省略せず既存のロジックを使用してください) ---
-    //document.getElementById('kanaOutput').innerText = finalKana;
-    // ...以下、解説表示の処理...
-    displayExplanation(normalizedInput, sortedIpaKeys); 
-}
-
-// --- 追加：サニタイズ用の関数 ---
-function escapeHTML(str) {
-    if (!str) return "";
-    return str.replace(/[&<>"']/g, function(m) {
-        return {
-            '&': '&amp;',
-            '<': '&lt;',
-            '>': '&gt;',
-            '"': '&quot;',
-            "'": '&#39;'
-        }[m];
-    });
-}
-
-function displayExplanation(normalizedInput, sortedIpaKeys) {
-    const resultArea = document.getElementById('explanationBody');
-    resultArea.innerHTML = ""; 
-    
-    const lines = normalizedInput.split('\n');
-
-    lines.forEach((line) => {
-        if (line.trim() === "") return; 
-
-        // 入力行をエスケープして表示
-        let safeLine = escapeHTML(line);
-        let tableRows = `<tr><th colspan="2" class="ipa-input-org">${safeLine}</th></tr>`;
-        
-        let tempStr = line;
-        while (tempStr.length > 0) {
-            let found = false;
-            for (let key of sortedIpaKeys) {
-                if (tempStr.startsWith(key)) {
-                    if (!/\s/.test(key)) {
-                        let desc = ipaDesc[key] || "解説なし";
-                        // keyとdescをエスケープして結合
-                        tableRows += `
-                            <tr>
-                                <td class="ipa-sym">${escapeHTML(key)}</td>
-                                <td><div>${escapeHTML(desc)}</div></td>
-                            </tr>`;
+            while (i < str.length) {
+                let match = null;
+                for (let key of sortedIpaKeys) {
+                    if (str.substr(i, key.length) === key) {
+                        match = key;
+                        break;
                     }
-                    tempStr = tempStr.slice(key.length);
-                    found = true;
-                    break;
+                }
+                if (match) {
+                    tokens.push(match);
+                    i += match.length;
+                } else {
+                    // ここで空白や未定義文字が1文字ずつ入る
+                    tokens.push(str[i]);
+                    i++;
                 }
             }
-            if (!found) {
-                let unknownChar = tempStr[0];
-                if (!/\s/.test(unknownChar)) {
-                    tableRows += `
-                        <tr>
-                            <td class="ipa-sym">${escapeHTML(unknownChar)}</td>
-                            <td><div>未定義の記号</div></td>
-                        </tr>`;
-                }
-                tempStr = tempStr.slice(1);
-            }
+            return tokens;
         }
-        resultArea.innerHTML += tableRows;
-    });
 
-    document.getElementById('resultArea').style.display = "block";
-}
-</script>
+        // 変換処理
+        function processIPA(isAuto = false) {
+            const rawInput = document.getElementById('ipaInput').value;
+            const resultArea = document.getElementById('resultArea');
+
+            let normalizedInput = rawInput;
+
+            const sortedIpaKeys = Object.keys(ipaToJpMap).sort((a, b) => b.length - a.length);
+
+            // 表記の正規化
+            const normKeys = Object.keys(ipaNormalizeMap).sort((a, b) => b.length - a.length);
+            normKeys.forEach(key => {
+                normalizedInput = normalizedInput.split(key).join(ipaNormalizeMap[key]);
+            });
+
+            // 内部変換用の変数
+            let processingInput = normalizedInput;
+
+            // 子音+「ː」を子音重ねに置換
+            const consonantsOnly = "pbtdʈɖcɟkɡqɢʡʔmɱnŋɲɳɴʙrʀⱱɾɽɸβfvθðszʃʒʂʐçʝxɣχʁħʕhɦɬɮʋɹɻjɰlɭʎʟwɥʍɕʑɓɗʄɠʛᶑt͡sd͡zt͡ʃd͡ʒt͡ɕd͡ʑʈ͡ʂɖ͡ʐt͡ɬd͡ɮ";
+
+            for (const key of sortedIpaKeys) {
+                // keyが子音リストに含まれている場合のみ、重ね処理を行う
+                if (consonantsOnly.includes(key)) {
+                    const target = key + "ː";
+                    if (processingInput.includes(target)) {
+                        processingInput = processingInput.split(target).join(key + key);
+                    }
+                }
+            }
+
+            // IPA→簡素音素　日本語に変換する前準備
+            let intermediate = "";
+            let tempInput = processingInput; // 内部変換用
+
+            while (tempInput.length > 0) {
+                let matched = false;
+
+                // 改行を保持
+                if (tempInput.startsWith("\n")) {
+                    intermediate += "\n";
+                    tempInput = tempInput.slice(1);
+                    continue;
+                }
+
+                // 空白は全角スペースとして保持
+                if (tempInput.startsWith(" ") || tempInput.startsWith("　")) {
+                    intermediate += "　";
+                    tempInput = tempInput.slice(1);
+                    continue;
+                }
+
+                for (const key of sortedIpaKeys) {
+                    if (tempInput.startsWith(key)) {
+                        let val = ipaToJpMap[key];
+                        intermediate += val;
+                        tempInput = tempInput.slice(key.length);
+                        matched = true;
+                        break;
+                    }
+                }
+
+                if (!matched) {
+                    // 未定義音素のスキップ
+                    tempInput = tempInput.slice(1);
+                }
+            }
+
+            // -子音が連続する場合、前の方を「ッ」
+            let fastIntermediate = "";
+            const cons = "bcdfghjklpqrstvwxyzʦʣʧʃj";
+
+            // 同一とみなすペアの正規表現置換
+            let normalized = intermediate
+                .replace(/tʦ/g, "ʦʦ")
+                .replace(/tʧ/g, "ʧʧ")
+                .replace(/dʣ/g, "ʣʣ")
+                .replace(/zj/g, "jj")
+                .replace(/sʃ/g, "ʃʃ");
+
+            for (let j = 0; j < intermediate.length; j++) {
+                let curr = normalized[j];
+                let next = normalized[j + 1];
+                // 置換
+                if (next && curr === next && cons.includes(next) && cons.includes(curr) && curr !== "n" && curr !== "m" && curr !== "w" && curr !== "y") {
+                    fastIntermediate += "ッ";
+                    // y, wの重複を削除
+                } else if (next && curr === next && cons.includes(next) && cons.includes(curr) && (curr === "w" || curr === "y")) {
+                    fastIntermediate += "";
+                } else {
+                    fastIntermediate += curr;
+                }
+            }
+            intermediate = fastIntermediate;
+
+            // 簡素音素→カタカナ
+            let finalKana = "";
+            let i = 0;
+            const vowels = "aiueo";
+            let lastChar = ""; // 直前の文字を保持
+            const isSmallConsonant = document.getElementById('smallConsonant').checked;
+            const singleConsonants = ["k", "g", "s", "z", "t", "d", "h", "f", "b", "p", "m", "r", "l", "v", "ʃ", "ʧ", "j", "ʦ", "ʣ"];
+
+            while (i < intermediate.length) {
+                let curr = intermediate[i];
+                let next = intermediate[i + 1];
+
+                // 特殊記号の処理
+                if (curr === " ") { finalKana += "　"; i++; continue; }
+                if (curr === "ー") { finalKana += "ー"; i++; continue; }
+                if (curr === "ッ") { finalKana += "ッ"; i++; continue; }
+
+                // 一部の両唇音の前のmを「ン」の同化と扱う
+                if (curr === "m" && (next === "m" || next === "b" || next === "p")) {
+                    finalKana += "ン";
+                    i++;
+                    continue;
+                }
+
+                // 2. 最大4文字のマッチング（tsaなどの外来語、サス/アツァス判定の核）
+                let match = null;
+                let matchedLen = 0;
+                let matchedKey = "";
+                for (let len = 4; len >= 1; len--) {
+                    let chunk = intermediate.substr(i, len);
+                    if (jpToKana[chunk]) {
+                        match = jpToKana[chunk];
+                        matchedLen = len;
+                        matchedKey = chunk;
+                        break;
+                    }
+                }
+
+                if (match) {
+                    let res = match;
+
+                    // サイズ変更の判定
+                    if (isSmallConsonant && singleConsonants.includes(matchedKey)) {
+                        finalKana += `<span class="small-char">${match}</span>`;
+                    } else {
+                        finalKana += match;
+                    }
+                    i += matchedLen;
+                } else {
+                    // フォールバック処理（マッチしなかった場合）
+                    if (jpToKana[curr]) {
+                        finalKana += jpToKana[curr];
+                        i++;
+                    } else {
+                        finalKana += curr;
+                        i++;
+                    }
+                }
+            }
+            // innerHTMLで出力（spanタグを有効にするため）
+            document.getElementById('kanaOutput').innerHTML = finalKana;
+
+            // 解説表示
+            displayExplanation(normalizedInput, sortedIpaKeys);
+        }
+
+        // 入力文字のエスケープ
+        function escapeHTML(str) {
+            if (!str) return "";
+            return str.replace(/[&<>"']/g, function (m) {
+                return {
+                    '&': '&amp;',
+                    '<': '&lt;',
+                    '>': '&gt;',
+                    '"': '&quot;',
+                    "'": '&#39;'
+                }[m];
+            });
+        }
+
+        // 解説表示
+        function displayExplanation(normalizedInput, sortedIpaKeys) {
+            const resultArea = document.getElementById('explanationBody');
+            resultArea.innerHTML = "";
+
+            const lines = normalizedInput.split('\n');
+
+            lines.forEach((line) => {
+                if (line.trim() === "") return;
+
+                // 入力行をエスケープして表示
+                let safeLine = escapeHTML(line);
+                let tableRows = `<tr><th colspan="2" class="ipa-input-org">${safeLine}</th></tr>`;
+
+                let tempStr = line;
+                while (tempStr.length > 0) {
+                    let found = false;
+                    for (let key of sortedIpaKeys) {
+                        if (tempStr.startsWith(key)) {
+                            if (!/\s/.test(key)) {
+                                let desc = ipaDesc[key]?.[0] || "解説なし";
+                                let link = ipaDesc[key]?.[1];
+
+                                let keyHtml = (link === null || link === undefined)
+                                    ? escapeHTML(key)
+                                    : `<a href="https://ja.wikipedia.org/wiki/${encodeURIComponent(link || key)}">${escapeHTML(key)}</a>`;
+
+                                tableRows += `
+                                <tr>
+                                    <td class="ipa-sym">${keyHtml}</td>
+                                    <td><div>${escapeHTML(desc)}</div></td>
+                                </tr>`;
+                            }
+                            tempStr = tempStr.slice(key.length);
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (!found) {
+                        let unknownChar = tempStr[0];
+                        if (!/\s/.test(unknownChar)) {
+                            tableRows += `
+                            <tr>
+                                <td class="ipa-sym">${escapeHTML(unknownChar)}</td>
+                                <td><div>未定義の記号</div></td>
+                            </tr>`;
+                        }
+                        tempStr = tempStr.slice(1);
+                    }
+                }
+                resultArea.innerHTML += tableRows;
+            });
+
+            document.getElementById('resultArea').style.display = "block";
+        }
+    </script>
 </body>
+
 </html>
