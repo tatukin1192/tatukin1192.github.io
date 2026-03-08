@@ -267,7 +267,9 @@
             "k": "ク", "g": "グ", "s": "ス", "z": "ズ", "t": "ト", "d": "ド",
             "n": "ン", "h": "フ", "f": "フ", "b": "ブ", "p": "プ", "m": "ム",
             "y": "ィ", "r": "ル", "l": "ル", "v": "ヴ", "w": "ゥ",
-            "ʃ": "シュ", "ʧ": "チュ", "j": "ジュ", "ʦ": "ツ", "ʣ": "ズ", "ny": "ン", "ŋ": "ン",
+            "ky": "キ", "gy": "ギ", "sy": "シ", "zy": "ズィ", "ty": "ティ", "dy": "ディ",
+            "hy": "ヒ", "fy": "フィ", "by": "ビ", "py": "ピ", "my": "ミ",
+            "y": "ィ", "r": "ル", "l": "ル", "v": "ヴ", "w": "ゥ",
         };
         // 解説データ
         const ipaDesc = {
@@ -513,7 +515,7 @@
             const vowels = "aiueo";
             let lastChar = ""; // 直前の文字を保持
             const isSmallConsonant = document.getElementById('smallConsonant').checked;
-            const singleConsonants = ["k", "g", "s", "z", "t", "d", "h", "f", "b", "p", "m", "r", "l", "v", "ʃ", "ʧ", "j", "ʦ", "ʣ"];
+            const singleConsonants = ["k", "g", "s", "z", "t", "d", "h", "f", "b", "p", "m", "r", "l", "v", "ʃ", "ʧ", "j", "ʦ", "ʣ", "ky", "gy", "sy", "zy", "ty", "dy", "hy", "fy", "by", "py", "my", "ry", "ly", "vy"];
 
             while (i < intermediate.length) {
                 let curr = intermediate[i];
