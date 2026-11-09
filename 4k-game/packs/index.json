@@ -1,0 +1,13 @@
+{
+  "packs": [
+    {
+      "id": "sample",
+      "folder": "Sample",
+      "name": "サンプルパック",
+      "description": "動作確認用のテストパック（raspberry 1曲入り）",
+      "version": 1,
+      "url": "sample/sample-pack.zip",
+      "sizeBytes": 5508318
+    }
+  ]
+}
